@@ -1,0 +1,48 @@
+﻿@model VideoInsights.Models.VideoDetailsData
+
+@{
+    ViewData["Title"] = "Video Details";
+}
+
+<h1>Video Details</h1>
+
+<h3>@Model.Name</h3>
+
+<video controls width="600" height="400">
+    <source src="@Model.Uri" type="video/mp4">
+    Video tag is not supported in this browser.
+</video>
+
+<h3>Frames</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Frame</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Labels</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.KeyFrames)
+        {
+            <tr>
+                <td><img src="@item.Thumbnail" width="300" height="150"></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeData.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeData.End)
+                </td>
+                <td>
+                    @foreach (var label in item.Labels)
+                    {
+                        @Html.DisplayFor(modelItem => label.Label)
+                        <br/>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

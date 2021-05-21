@@ -1,0 +1,30 @@
+﻿@model IEnumerable<VideoInsights.Models.VideoData>
+
+@{
+    ViewData["Title"] = "Videos from Video Indexer Service";
+}
+
+<a asp-action="Upload">Upload Video</a>
+<br />
+<br />
+<h1>Video List</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Videos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td align="center">
+                    <a asp-action="Details" asp-route-id="@item.Id"><img src="@item.Thumbnail.Content"></a>
+                    <br />
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,24 @@
+﻿@model VideoInsights.Web.Models.UploadViewModel
+@{
+    ViewData["Title"] = "Upload Videos to Video Indexer Service";
+}
+
+<h1>Upload Video</h1>
+
+<form enctype="multipart/form-data" method="post">
+    <dl>
+        <dt>
+            <label asp-for="VideoFile" />
+        </dt>
+        <dd>
+            <input asp-for="VideoFile" type="file" />
+        </dd>
+    </dl>
+    <input class="btn-primary" type="submit" value="Upload" />
+</form>
+
+<br />
+<h3>File: @Model.VideoFile?.FileName</h3>
+
+<br />
+<h3>Result: @Model.Result</h3>
