@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using VideoInsights.Api.Models;
+using VideoInsights.Api.Helpers;
 using VideoInsights.Api.Contexts;
 
 namespace VideoInsights.Api.Controllers
@@ -79,6 +80,16 @@ namespace VideoInsights.Api.Controllers
                 return NotFound();
 
             _context.Videos.Remove(video);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE api/<VideoDbController>/All
+        [HttpDelete("All")]
+        public async Task<IActionResult> DeleteAll()
+        {
+            _context.Videos.Clear();
             await _context.SaveChangesAsync();
 
             return NoContent();

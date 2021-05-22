@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using VideoInsights.Api.Models;
+using VideoInsights.Api.Helpers;
 using VideoInsights.Api.Contexts;
 
 namespace VideoInsights.Api.Controllers
@@ -87,6 +88,16 @@ namespace VideoInsights.Api.Controllers
                 return NotFound();
 
             _context.Timeperiods.Remove(timeperiod);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE api/<TimeperiodDbController>/All
+        [HttpDelete("All")]
+        public async Task<IActionResult> DeleteAll()
+        {
+            _context.Timeperiods.Clear();
             await _context.SaveChangesAsync();
 
             return NoContent();
