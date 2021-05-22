@@ -22,6 +22,8 @@ namespace VideoInsights.Models
     public class VideoIndexData
     {
         public string Name { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime LastIndexed { get; set; }
         public IList<VideoInsightsData> Videos { get; set; }
     }
 
@@ -57,12 +59,13 @@ namespace VideoInsights.Models
 
     public class KeyFrameDetailsData
     {
+        public string Id { get; set; }
         public IList<InstanceData> Instances { get; set; }
     }
 
     public class LabelDetailsData
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public IList<AppearanceData> Appearances { get; set; }
     }
@@ -93,6 +96,8 @@ namespace VideoInsights.Models
         public string Id { get; set; }
         public string Uri { get; set; }
         public string Name { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime LastIndexed { get; set; }
 
         public List<KeyFrameData> KeyFrames { get; set; }
     }

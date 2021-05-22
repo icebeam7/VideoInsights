@@ -1,10 +1,9 @@
-﻿@model IEnumerable<VideoInsights.Models.VideoData>
+﻿@model IEnumerable<VideoInsights.Models.Video>
 
 @{
-    ViewData["Title"] = "Videos from Video Indexer Service";
+    ViewData["Title"] = "Videos from Database";
 }
 
-<a asp-action="Upload">Upload Video</a>
 <br />
 <br />
 <h1>Video List</h1>
@@ -12,7 +11,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Videos from Indexer Service</th>
+            <th>Videos from Database</th>
         </tr>
     </thead>
     <tbody>
@@ -20,7 +19,7 @@
         {
             <tr>
                 <td align="center">
-                    <a asp-action="Details" asp-route-id="@item.Id"><img src="@item.Thumbnail.Content"></a>
+                    <a asp-action="DetailsDb" asp-route-id="@item.Id"><img src="@item.Thumbnail.First().Content"></a>
                     <br />
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>

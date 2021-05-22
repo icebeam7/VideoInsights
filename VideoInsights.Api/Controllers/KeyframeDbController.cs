@@ -36,6 +36,14 @@ namespace VideoInsights.Api.Controllers
             return (keyframe != null) ? Ok(keyframe) : NotFound();
         }
 
+        // GET api/<KeyframeDbController>/ByVideo/5
+        [HttpGet("ByVideo/{id}")]
+        public async Task<IActionResult> GetKeyframeByVideo(string id)
+        {
+            var keyframes = await _context.Keyframes.Where(x => x.Videoid == id).ToListAsync();
+            return (keyframes != null) ? Ok(keyframes) : NotFound();
+        }
+
         // PUT api/<KeyframeDbController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutKeyframe(string id, [FromBody] Keyframe keyframe)

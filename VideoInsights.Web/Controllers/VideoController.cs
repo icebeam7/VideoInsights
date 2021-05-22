@@ -1,69 +1,44 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-using VideoInsights.Models;
 using VideoInsights.Web.Models;
 using VideoInsights.Web.Helpers;
-using System.Net.Http.Headers;
+using VideoInsights.Web.Services;
 
 namespace VideoInsights.Web.Controllers
 {
     public class VideoController : Controller
     {
-        private readonly HttpClient _client;
         private readonly VideoOptions _options;
-
-        private readonly string videoIndexerApiUrl = "api/VideoIndexer";
-        private readonly string videoDbApiUrl = "api/VideoDb";
+        private VideoInsightsApiService _service;
 
         public VideoController(IOptions<VideoOptions> videoOptions)
         {
             _options = videoOptions.Value;
-            _client = HttpClientHelper.CreateInstance(_options.Url);
+            _service = new VideoInsightsApiService(_options.Url);
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await _client.GetAsync(videoIndexerApiUrl);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var videoData = JsonConvert.DeserializeObject<List<VideoData>>(json);
-
-                foreach (var item in videoData)
-                    item.Thumbnail.Content = ThumbnailHelper.AddData(item.Thumbnail);
-
-                return View(videoData);
-            }
-
-            return View(default(VideoData));
+            var data = await _service.GetVideosIndexerData();
+            return View(data);
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
-            var url = $"{videoIndexerApiUrl}/{id}";
-            var response = await _client.GetAsync(url);
+            var vm = await _service.GetDetails(id);
+            return View(vm);
+        }
 
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var videoDetailsData = JsonConvert.DeserializeObject<VideoDetailsData>(json);
-
-                foreach (var item in videoDetailsData.KeyFrames)
-                    item.Thumbnail.Content = ThumbnailHelper.AddData(item.Thumbnail);
-
-                return View(videoDetailsData);
-            }
-
-            return View(default(VideoDetailsData));
+        [HttpGet]
+        public async Task<IActionResult> DetailsDb(string id)
+        {
+            var vm = await _service.GetDetailsDb(id);
+            return View(vm);
         }
 
         [HttpGet]
@@ -79,37 +54,23 @@ namespace VideoInsights.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(UploadViewModel vm)
         {
-            var file = vm.VideoFile;
-            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var vmU = await _service.UploadVideo(vm);
+            return UploadView(vmU);
+        }
 
-            using MultipartFormDataContent content = new MultipartFormDataContent();
-            content.Add(new StreamContent(file.OpenReadStream())
-            {
-                Headers =
-                {
-                    ContentLength = file.Length,
-                    ContentType = new MediaTypeHeaderValue(file.ContentType)
-                }
-            }, "File", fileName);
 
-            var response = await _client.PostAsync(videoIndexerApiUrl, content);
-            vm.Result = response.IsSuccessStatusCode;
-            return UploadView(vm);
+        [HttpPost]
+        public async Task<IActionResult> AddDb(string id)
+        {
+            var vm = await _service.AddDb(id);
+            return View("Details", vm);
         }
 
         [HttpGet]
         public async Task<IActionResult> IndexDb()
         {
-            var response = await _client.GetAsync(videoDbApiUrl);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var videos = JsonConvert.DeserializeObject<List<Video>>(json);
-                return View(videos);
-            }
-
-            return View(default(Video));
+            var videos = await _service.GetVideosDb();
+            return View(videos);
         }
     }
 }

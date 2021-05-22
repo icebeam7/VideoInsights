@@ -28,6 +28,14 @@ namespace VideoInsights.Api.Controllers
             return Ok(thumbnails);
         }
 
+        // GET api/<ThumbnailDbController>/ByExternal/5
+        [HttpGet("ByExternal/{id}")]
+        public async Task<IActionResult> GetThumbnailByExternal(string id)
+        {
+            var thumbnails = await _context.Thumbnails.Where(x => x.Externalid == id).ToListAsync();
+            return (thumbnails != null) ? Ok(thumbnails) : NotFound();
+        }
+
         // GET api/<ThumbnailDbController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetThumbnail(string id)

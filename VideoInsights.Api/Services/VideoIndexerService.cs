@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -119,6 +120,8 @@ namespace VideoInsights.Api.Services
                 if (videoIndex != null)
                 {
                     details.Name = videoIndex.Name;
+                    details.Created = videoIndex.Created;
+                    details.LastIndexed = videoIndex.LastIndexed;
                     var video = videoIndex.Videos.FirstOrDefault();
 
                     if (video != null)
@@ -131,8 +134,10 @@ namespace VideoInsights.Api.Services
 
                                     details.KeyFrames.Add(new KeyFrameData()
                                     {
+                                        Id = Guid.NewGuid().ToString(),
                                         TimeData = new TimeData()
                                         {
+                                            Id = Guid.NewGuid().ToString(),
                                             Start = instance.Start,
                                             End = instance.End
                                         },
@@ -169,6 +174,7 @@ namespace VideoInsights.Api.Services
 
                 labelDetails.Add(new LabelDetailsData()
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Name = item.Name,
                     Appearances = ac
                 });
@@ -184,7 +190,11 @@ namespace VideoInsights.Api.Services
                 {
                     if (labelDetail.Appearances.Any(x =>
                             startTime >= x.StartTime && endTime <= x.EndTime))
-                        item.Labels.Add(new LabelData() { Label = labelDetail.Name });
+                        item.Labels.Add(new LabelData() 
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Label = labelDetail.Name 
+                        });
                 }
             }
 

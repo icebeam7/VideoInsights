@@ -36,6 +36,14 @@ namespace VideoInsights.Api.Controllers
             return (timeperiod != null) ? Ok(timeperiod) : NotFound();
         }
 
+        // GET api/<TimeperiodDbController>/ByKeyframe/5
+        [HttpGet("ByKeyframe/{id}")]
+        public async Task<IActionResult> GetTimePeriodByKeyframe(string id)
+        {
+            var timeperiods = await _context.Timeperiods.Where(x => x.Keyframeid == id).ToListAsync();
+            return (timeperiods != null) ? Ok(timeperiods) : NotFound();
+        }
+
         // PUT api/<TimeperiodDbController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTimeperiod(string id, [FromBody] Timeperiod timeperiod)

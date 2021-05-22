@@ -5,8 +5,7 @@ namespace VideoInsights.Models
 {
     public class Video
     {
-        public int Id { get; set; }
-        public string VideoIndexerId { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Uri { get; set; }
         public DateTime Created { get; set; }
@@ -18,12 +17,14 @@ namespace VideoInsights.Models
     public class Thumbnail
     {
         public string Id { get; set; }
+        public string ExternalId { get; set; }
         public string Content { get; set; }
     }
 
     public class KeyFrame
     {
         public string Id { get; set; }
+        public string VideoId { get; set; }
         public List<TimePeriod> TimePeriod { get; set; }
         public List<Thumbnail> Thumbnail { get; set; }
         public List<Label> Labels { get; set; }
@@ -32,13 +33,15 @@ namespace VideoInsights.Models
     public class TimePeriod
     {
         public string Id { get; set; }
-        public string Start { get; set; }
-        public string End { get; set; }
+        public string KeyframeId { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
     }
 
     public class Label
     {
         public string Id { get; set; }
+        public string KeyframeId { get; set; }
         public string Content { get; set; }
     }
 }

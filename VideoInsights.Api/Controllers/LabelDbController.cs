@@ -36,6 +36,14 @@ namespace VideoInsights.Api.Controllers
             return (label != null) ? Ok(label) : NotFound();
         }
 
+        // GET api/<LabelDbController>/ByKeyframe/5
+        [HttpGet("ByKeyframe/{id}")]
+        public async Task<IActionResult> GetLabelByKeyframe(string id)
+        {
+            var labels = await _context.Labels.Where(x => x.Keyframeid == id).ToListAsync();
+            return (labels != null) ? Ok(labels) : NotFound();
+        }
+
         // PUT api/<LabelDbController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLabel(string id, [FromBody] Label label)
