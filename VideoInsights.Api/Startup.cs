@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 using VideoInsights.Api.Helpers;
 using VideoInsights.Api.Services;
+using VideoInsights.Api.Contexts;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace VideoInsights.Api
 {
@@ -31,6 +34,10 @@ namespace VideoInsights.Api
 
             services.AddSingleton<IVideoIndexerService, VideoIndexerService>();
 
+            var dbConnection = Configuration.GetSection("VideoDatabase")["ConnectionString"];
+            services.AddDbContext<VideoInsightsDbContext>(options =>
+                options.UseNpgsql(dbConnection));
+
             services.AddOptions<VideoIndexerOptions>()
                 .Configure(Configuration.GetSection("VideoIndexer").Bind)
                 .ValidateDataAnnotations();
@@ -39,11 +46,9 @@ namespace VideoInsights.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-         
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VideoInsights.Api v1"));
-            
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VideoInsights.Api v1"));
 
             app.UseHttpsRedirection();
 

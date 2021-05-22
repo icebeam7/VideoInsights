@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-//using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-using VideoInsights.Models;
-//using VideoInsights.Api.Context;
+using VideoInsights.Api.Models;
+using VideoInsights.Api.Contexts;
 
 namespace VideoInsights.Api.Controllers
 {
@@ -16,9 +16,9 @@ namespace VideoInsights.Api.Controllers
     [ApiController]
     public class VideoDbController : ControllerBase
     {
-        /*private readonly VideoDbContext _context;
+        private readonly VideoInsightsDbContext _context;
 
-        public VideoDbController(VideoDbContext context)
+        public VideoDbController(VideoInsightsDbContext context)
         {
             _context = context;
         }
@@ -33,7 +33,7 @@ namespace VideoInsights.Api.Controllers
 
         // GET api/<VideoDbController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetVideo(int id)
+        public async Task<IActionResult> GetVideo(string id)
         {
             var video = await _context.Videos.FindAsync(id);
             return (video != null) ? Ok(video) : NotFound();
@@ -41,7 +41,7 @@ namespace VideoInsights.Api.Controllers
 
         // PUT api/<VideoDbController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVideo(int id, [FromBody] Video video)
+        public async Task<IActionResult> PutVideo(string id, [FromBody] Video video)
         {
             if (id != video.Id)
                 return BadRequest();
@@ -67,7 +67,7 @@ namespace VideoInsights.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostVideo([FromBody] Video video)
         {
-            _context.Video.Add(video);
+            _context.Videos.Add(video);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetVideo", new { id = video.Id }, video);
@@ -75,22 +75,21 @@ namespace VideoInsights.Api.Controllers
 
         // DELETE api/<VideoDbController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVideo(int id)
+        public async Task<IActionResult> DeleteVideo(string id)
         {
-            var video = await _context.Video.FindAsync(id);
+            var video = await _context.Videos.FindAsync(id);
             if (video == null)
                 return NotFound();
 
-            _context.Video.Remove(video);
+            _context.Videos.Remove(video);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool VideoExists(int id)
+        private bool VideoExists(string id)
         {
-            return _context.Video.Any(e => e.Id == id);
+            return _context.Videos.Any(e => e.Id == id);
         }
-        */
     }
 }
